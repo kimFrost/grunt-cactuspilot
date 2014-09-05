@@ -1,0 +1,51 @@
+
+
+html,
+body {
+	margin: 0;
+}
+
+
+$navWidth: 200px;
+
+.l-modules {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	padding: 20px;
+}
+.l-modules__navigation {
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: $navWidth;
+}
+
+.l-modules__title {
+	width: 100%;
+}
+.l-modules__description {
+	width: 100%;
+}
+.l-modules__list {
+	padding: 20px;
+	position: absolute;
+	left: 0;
+	top: 130px;
+	bottom: 0;
+	right: $navWidth;
+}
+.cactus-module {
+	position: relative;
+	width: 100%;
+	margin-bottom: 5px;
+}
+/*
+.cactus-module__block {
+
+}
+*/
+
