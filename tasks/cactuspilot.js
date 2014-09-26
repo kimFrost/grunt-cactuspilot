@@ -63,10 +63,27 @@ module.exports = function(grunt) {
 					var elementList = temp.split(/\,/g);
 					for (var ii=0;ii<elementList.length;ii++) {
 						var element = elementList[ii];
-						var index = element.indexOf("__");
+						//var index = element.indexOf("__");
+
+						// Error handling
+						if (element === undefined || element.length < 2) {
+							continue;
+						}
+
 						element = element.split('__')[1];
-						element = element.split('--')[0];
+						if (element.indexOf('--') !== -1) {
+							element = element.split('--')[0];
+						}
 						element = element.replace(/ /g,"");
+
+
+						// Remove pseudo classes ?
+						//state = state.replace(/\:hover/g,"").replace(/\::hover/g,"").replace(/\:active/g,"").replace(/\::active/g,"");
+						if (element.indexOf(':') !== -1) {
+							element = element.split(':')[0];
+						}
+
+
 						var className = blockName + '__' + element;
 
 						var found = false;
@@ -104,13 +121,22 @@ module.exports = function(grunt) {
 					var statesList = temp.split(/\,/g);
 					for (var ii=0;ii<statesList.length;ii++) {
 						var state = statesList[ii];
+
+						// Error handling
+						if (state === undefined || state.length < 2) {
+							continue;
+						}
+
 						var index = state.indexOf("--");
 						state = state.split('--')[1];
 						state = state.split(' ')[0];
 						state = state.replace(/ /g,"");
 
 						// Remove pseudo classes ?
-						state = state.replace(/\:hover/g,"").replace(/\::hover/g,"").replace(/\:active/g,"").replace(/\::active/g,"");
+						//state = state.replace(/\:hover/g,"").replace(/\::hover/g,"").replace(/\:active/g,"").replace(/\::active/g,"");
+						if (state.indexOf(':') !== -1) {
+							state = state.split(':')[0];
+						}
 
 						var className = name + '--' + state;
 
