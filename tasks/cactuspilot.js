@@ -67,23 +67,30 @@ module.exports = function(grunt) {
 						element = element.split('__')[1];
 						element = element.split('--')[0];
 						element = element.replace(/ /g,"");
-						element = blockName + '__' + element;
-						if (elements.indexOf(element) === -1) {
-							elements.push(element);
-							grunt.log.writeln('element: ' + element);
+						var className = blockName + '__' + element;
+
+						var found = false;
+						for (var iii=0;iii<elements.length;iii++) {
+							var _element = elements[iii];
+							if (_element.className === className) {
+								found = true;
+								break;
+							}
+						}
+						if (!found) {
+							elements.push({
+								name: element,
+								className: className,
+								master: blockName,
+								states: []
+							});
+							grunt.log.writeln('element: ' + className);
 						}
 					}
 				}
 			}
 			grunt.log.writeln("------------!getElements------------");
-			for (var i=0;i<elements.length;i++) {
-				var element = elements[i];
-				elementsEnriched.push({
-					name: element,
-					states: []
-				});
-			}
-			return elementsEnriched;
+			return elements;
 		},
 		getStates: function(string, name) {
 			grunt.log.writeln("------------getStates------------");
@@ -105,10 +112,25 @@ module.exports = function(grunt) {
 						// Remove pseudo classes ?
 						state = state.replace(/\:hover/g,"").replace(/\::hover/g,"").replace(/\:active/g,"").replace(/\::active/g,"");
 
-						if (states.indexOf(state) === -1) {
-							states.push(state);
-							grunt.log.writeln('state: ' + state);
+						var className = name + '--' + state;
+
+						var found = false;
+						for (var iii=0;iii<states.length;iii++) {
+							var _state = states[iii];
+							if (_state.className === className) {
+								found = true;
+								break;
+							}
 						}
+						if (!found) {
+							states.push({
+								name: state,
+								className: className,
+								master: name
+							});
+							grunt.log.writeln('state: ' + className);
+						}
+
 					}
 				}
 			}
@@ -178,6 +200,8 @@ module.exports = function(grunt) {
 
 				var data = {
 					name: modulename,
+					description: moduleDesc,
+					markup: moduleMarkup,
 					states: plugin.getStates(cssAfterCactus, modulename),
 					elements: plugin.getElements(cssAfterCactus, modulename)
 				}
@@ -186,12 +210,11 @@ module.exports = function(grunt) {
 				for (var ii=0;ii<data.elements.length;ii++) {
 					var element = data.elements[ii];
 					//data.elements[ii].states = plugin.getStates(cssAfterCactus, element.name);
-					element.states = plugin.getStates(cssAfterCactus, element.name);
+					element.states = plugin.getStates(cssAfterCactus, element.className);
 				}
 
-				//var generatedHtml = modulename;
-
 				/*
+				var generatedHtml = plugin.geneateHtmlPage();
 				grunt.file.write(f.dest + modulename + ".html", generatedHtml, {
 					encoding: "utf-8"
 				});
