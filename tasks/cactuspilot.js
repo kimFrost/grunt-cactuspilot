@@ -51,7 +51,7 @@ module.exports = function(grunt) {
 			return contentList;
 		},
 		// Get Elements of blockname
-		getElements: function(string, blockName) {
+		getElements: function(string, blockName, moduleMarkup) {
 			grunt.log.writeln("------------getElements------------");
 			var elements = [];
 			var elementsEnriched = [];
@@ -94,11 +94,36 @@ module.exports = function(grunt) {
 								break;
 							}
 						}
+
+						var markup = '';
+						/*
+						var stringTags = moduleMarkup.split('<');
+						for (var iii=0;iii<stringTags.length;iii++) {
+							stringTags[iii] = '<' + stringTags[iii];
+							var stringTag = stringTags[iii];
+							var stringTagClass = '';
+
+							stringTag = stringTag.split('>')[0];
+							if (stringTag.indexOf('class="') != -1) {
+								stringTagClass = stringTag.match(/"([^"]+)"/)[1];
+
+								if (stringTagClass === className) {
+									markup = stringTags[iii];
+								}
+
+								//grunt.log.writeln('stringTag: ' + stringTag);
+								grunt.log.writeln('stringTagClass: ' + stringTagClass);
+							}
+						}
+						grunt.log.writeln('stringTags: ' + stringTags);
+						*/
+
 						if (!found) {
 							elements.push({
 								name: element,
 								className: className,
 								master: blockName,
+								markup: markup,
 								states: []
 							});
 							grunt.log.writeln('element: ' + className);
@@ -162,6 +187,22 @@ module.exports = function(grunt) {
 			}
 			grunt.log.writeln("------------!getStates------------");
 			return states;
+		},
+		constructMarkupObject: function(markup) {
+			grunt.log.writeln("------------constructMarkupObject------------");
+			//var test = markup.match(/"([^"]+)"/)[1];
+			var test = markup.match(/"([^"]+)"/g);
+			var tagList = markup.replace(/</g, ',<').split(',');
+			tagList.shift(); // Remove first item, which is just a ','
+
+			grunt.log.writeln('markup: ' + markup);
+			grunt.log.writeln('test: ' + test);
+			grunt.log.writeln('tagList: ' + tagList);
+			//valueInQuates = stringTag.match(/"([^"]+)"/)[1];
+
+
+
+			grunt.log.writeln("------------!constructMarkupObject------------");
 		}
 	}
 /*---------------------------------------------------------------
@@ -228,8 +269,9 @@ module.exports = function(grunt) {
 					name: modulename,
 					description: moduleDesc,
 					markup: moduleMarkup,
+					markupObj: plugin.constructMarkupObject(moduleMarkup),
 					states: plugin.getStates(cssAfterCactus, modulename),
-					elements: plugin.getElements(cssAfterCactus, modulename)
+					elements: plugin.getElements(cssAfterCactus, modulename, moduleMarkup)
 				}
 
 				// Enrich elements with states
