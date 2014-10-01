@@ -217,14 +217,17 @@ module.exports = function(grunt) {
 					isCloseTag = true;
 				}
 
-
-
-
+				var innerContent = null;
+				// Content
+				if (!isCloseTag) {
+					innerContent = mark.split('>')[1];
+				}
 
 
 				grunt.log.ok('mark: ' + mark);
 				grunt.log.ok('tagType: ' + tagType);
 				grunt.log.ok('isCloseTag: ' + isCloseTag);
+				grunt.log.ok('innerContent: ' + innerContent);
 				//grunt.log.writeln('tagList: ' + tagList);
 				//grunt.log.writeln('markStripped: ' + markStripped);
 				grunt.log.ok('allAttrAndValues: ' + allAttrAndValues);
