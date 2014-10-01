@@ -190,19 +190,64 @@ module.exports = function(grunt) {
 		},
 		constructMarkupObject: function(markup) {
 			grunt.log.writeln("------------constructMarkupObject------------");
+
+			var obj = {};
+
 			//var test = markup.match(/"([^"]+)"/)[1];
 			var test = markup.match(/"([^"]+)"/g);
-			var tagList = markup.replace(/</g, ',<').split(',');
-			tagList.shift(); // Remove first item, which is just a ','
+			var markupList = markup.replace(/</g, ',<').split(',');
+			markupList.shift(); // Remove first item, which is just a ','
 
+			for (var i=0;i<markupList.length;i++) {
+				var mark = markupList[i];
+				//var markStripped = mark.replace(/</g, '').replace(/>/g, '');
+				//var tagList = mark.match(/<([^<^\s\>]+)/g);
+
+				// Get attributes and tag type
+				//var allAttrAndValues = mark.match(/([\w\-.:]+)\s*=\s*("[^"]*"|'[^']*'|[\w\-.:]+)/gi)
+				var allAttrAndValues = mark.match(/([a-z\-.:]+)\s*=\s*("[^"]*"|'[^']*'|[a-z\-.:]+)/gi);
+				var tagType = mark.match(/(\w+)/i);
+				if (Array.isArray(tagType) && tagType.length > 1) {
+					tagType = tagType[0];
+				}
+
+				// Check for closing tag
+				var isCloseTag = false;
+				if (mark.indexOf('</') != -1) {
+					isCloseTag = true;
+				}
+
+
+
+
+
+
+				grunt.log.ok('mark: ' + mark);
+				grunt.log.ok('tagType: ' + tagType);
+				grunt.log.ok('isCloseTag: ' + isCloseTag);
+				//grunt.log.writeln('tagList: ' + tagList);
+				//grunt.log.writeln('markStripped: ' + markStripped);
+				grunt.log.ok('allAttrAndValues: ' + allAttrAndValues);
+
+
+			}
+
+
+
+
+			/*
+			grunt.log.writeln('mark: ' + mark);
 			grunt.log.writeln('markup: ' + markup);
 			grunt.log.writeln('test: ' + test);
 			grunt.log.writeln('tagList: ' + tagList);
+			*/
+
 			//valueInQuates = stringTag.match(/"([^"]+)"/)[1];
 
 
 
 			grunt.log.writeln("------------!constructMarkupObject------------");
+			return obj;
 		}
 	}
 /*---------------------------------------------------------------
